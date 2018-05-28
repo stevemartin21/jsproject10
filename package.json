@@ -1,0 +1,19 @@
+{
+  "name": "project10a",
+  "version": "1.0.0",
+  "description": "library node sequelize",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sequelize"
+  ],
+  "author": "Steve Martin",
+  "license": "ISC",
+  "dependencies": {
+    "sequelize": "^4.37.10",
+    "sequelize-cli": "^4.0.0",
+    "sqlite3": "^4.0.0"
+  }
+}
