@@ -174,8 +174,8 @@ router.get('/books/:id', function(req, res, next) {
 				Loans.findAll({
 
 					include: [
-							  {model: Books,required: true}, 
-							  {model: Patrons,required: true}
+							  {model: Books}, 
+							  {model: Patrons}
 							 ],
 					where: {
 						book_id: req.params.id
@@ -199,8 +199,8 @@ router.get('/patrons/:id', function(req, res, next) {
 		Loans.findAll({
 
 					include: [
-							  {model: Books,required: true}, 
-							  {model: Patrons,required: true}
+							  {model: Books}, 
+							  {model: Patrons}
 							 ],
 					where: {
 						patron_id: req.params.id
