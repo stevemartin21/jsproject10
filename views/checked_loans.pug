@@ -1,0 +1,48 @@
+doctype html
+html
+  head
+    title Checked Out Loans
+    link(rel='stylesheet', href='stylesheets/style.css')
+  nav
+    ul
+      li
+        a(href='/') Home
+      li
+        a(href='/all_books') Books
+      li
+        a(href='/all_patrons') Patrons
+      li
+        a(href='/all_loans') Loans
+  include ./error
+  body
+    h1 Checked Out Loans
+    p
+      a.button(href='loansNew') Create New Loan
+    p
+      | Filters 
+      a(href='/all_loans') All
+      |  
+      a(href='/overdueLoans') Overdue
+      |  
+      a(href='/loansCheckedOut') Checked Out
+    table
+      thead
+        tr
+          th Book
+          th Patron 
+          th Loaned on
+          th Return by 
+          th Returned on
+          th Action
+      tbody
+        each loan in checkLoans 
+          tr
+            td
+              a(href='/books/'+ loan.dataValues.Book.id )=loan.dataValues.Book.title 
+            td
+              a(href='/patrons/' + loan.dataValues.Patron.id)=loan.dataValues.Patron.first_name + ' ' + loan.dataValues.Patron.last_name
+            td=loan.dataValues.loaned_on
+            td=loan.dataValues.return_by
+            td
+            td
+              a.button(href='/return_book/'+ loan.dataValues.Book.id) Return Book

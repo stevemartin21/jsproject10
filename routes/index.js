@@ -1,0 +1,351 @@
+var express = require('express');
+var router = express.Router();
+//Need to install
+var dateFormat = require('dateformat');
+var moment = require('moment');
+var methodOverride = require('method-override');
+const Books =require('../models').Books;
+const Patrons =require('../models').Patrons;
+const Loans =require('../models').Loans;
+//console.log(Books);
+// Date Format usig moment js 
+var now = moment().format('YYYY-MM-DD').toString();
+var dueDate = moment().add(30, 'days').format('YYYY-MM-DD'); 
+
+
+///  NExt Steps  Add Error Validation to Add Book, Add Patron, Add Loan, and Update those items as well
+
+// Basic usage
+
+
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('home', { title: "Stevo's" })
+  .catch(function (err) {
+	  //console.log('This is an error')
+	});
+});
+		
+// New books add a book 
+router.get('/booksNew', function(req, res, next) {
+	res.render('new_book', {book: Books.build()})
+	.catch(function (err) {
+	  console.log('This is an error')
+	});
+});
+
+// Add a new patron
+
+router.get('/patronsNew', function(req, res, next) {	
+  res.render('new_patron');
+});
+
+// Add a new loan
+
+router.get('/loansNew', function(req, res, next) {	
+	Books.findAll().then(function(books){
+		Patrons.findAll().then(function(patrons){
+			res.render('new_loan', {
+				books:books, 
+				patrons:patrons,
+				now:now,
+				dueDate:dueDate
+			})
+		});	
+
+	});
+});
+
+// Book Checked Out  Books that are checked out 
+	
+router.get('/checkedOut', function(req, res, next) {	
+	Loans.findAll({
+
+		where: {returned_on: null },
+		include:[Books	
+		]
+		
+	}).then(function(books){
+		console.log(books[0].dataValues.Book.dataValues.title);
+		
+			res.render('checked_books', {
+				books:books 	
+			})
+		});	
+	});
+
+///////////////  THis will help return a book
+
+
+router.get('/return_book/:id', function(req, res, next) {	
+	Books.findById(req.params.id).then(function(bookId){
+			console.log(bookId)
+		Loans.findAll({
+
+					include: [
+							  
+							  {model: Patrons,required: true}
+							 ],
+					where: {
+						book_id: req.params.id
+					}
+				}).then(function(info){
+				var Details = bookId
+				res.render('return_book', {Details:Details, info:info, now:now});
+				console.log(info)
+			})
+		});
+});
+
+
+// Book Over Dune  This will grab the overdue books from the list
+
+router.get('/overdue', function(req, res, next) {	
+	Loans.findAll({
+		where: {returned_on: {$eq: null}, return_by: {$lt: now}},
+		include:[{model:Books}]
+	}).then(function(books){
+			res.render('overdue_books', {
+				books:books 
+			})
+		});	
+	});
+
+// OVer due loans 
+
+
+router.get('/overdueLoans', function(req, res, next) {
+		
+	Loans.findAll({
+		where: {returned_on: {$eq: null}, return_by: {$lt: now }},
+		include:[{model:Books}, {model:Patrons}]
+
+	}).then(function(checkLoans){
+		console.log(checkLoans)
+		res.render('overdue_loans', {checkLoans:checkLoans})
+			console.log('check it or wreck it')
+			
+		//console.log(checkLoans[0].dataValues.Patron.first_name)
+	})
+	
+});
+
+/*
+
+each loan in checkLoans 
+          tr
+            td
+              a(href='/book_detail')=loan.dataValues.Book.title 
+            td
+              a(href='/patron_detail')=loan.dataValues.Patron.first_name + ' ' + loan.dataValues.Patron.last_name
+            td=loan.dataValues.loaned_on
+            td=loan.dataValues.return_by
+            td
+            td
+              a.button(href='/return_book') Return Book
+           
+
+
+
+*/
+
+
+////////////////////////////////////////////////////////////////////////  Loans Checked OUt
+
+router.get('/loansCheckedOut', function(req, res, next) {	
+	Loans.findAll({
+		where: {returned_on: null },
+		include:[{model:Books}, {model:Patrons}]
+	}).then(function(checkLoans){
+			res.render('checked_loans', {
+				checkLoans:checkLoans 
+			})
+			console.log(checkLoans[0].dataValues.Patron.last_name)
+		});	
+
+	});
+
+// Get by Id grab the book and details from the book once selected 
+
+router.get('/books/:id', function(req, res, next) {
+	//console.log(req.body)
+			Books.findById(req.params.id).then(function(bookId){
+				//
+				Loans.findAll({
+
+					include: [
+							  {model: Books,required: true}, 
+							  {model: Patrons,required: true}
+							 ],
+					where: {
+						book_id: req.params.id
+					}
+				}).then(function(info){
+				var Details = bookId
+				res.render('book_detail', {Details:Details, info:info});
+				console.log(info.Patron)
+			})
+		});
+	});
+
+
+
+//grab the details from the patron 
+
+router.get('/patrons/:id', function(req, res, next) {
+	console.log('it worked')
+	Patrons.findById(req.params.id).then(function(patronsId){
+		//console.log(patronsId.dataValues);
+		Loans.findAll({
+
+					include: [
+							  {model: Books,required: true}, 
+							  {model: Patrons,required: true}
+							 ],
+					where: {
+						patron_id: req.params.id
+					}
+				}).then(function(info){
+				var Details = patronsId
+				res.render('patron_detail', {Details:Details, info:info});
+				console.log(info)
+			})
+	})
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//  Update the book details, I can't seem to get this one to work
+
+router.put("/books/:id", function(req, res, next){
+	console.log(req.body)
+	
+	Books.findById(req.params.id).then(function(book){
+		console.log('Nice work Coder')
+		return book.update(req.body);
+		
+	}).then(function(book){
+			res.redirect('/all_books')
+				}).catch(function (err) {
+			  console.log('This is an error')
+			})
+	}); 
+
+
+	//  This will return all book s 
+
+router.get('/all_books', function(req, res, next) {
+	
+	Books.findAll().then(function(allBooks){
+		//include:[{model: Patrons,required: true}]
+		console.log(allBooks);
+		var Library = allBooks;
+		//console.log(Library)
+		res.render('all_books', {Library});
+	}).catch(function (err) {
+	  console.log('This is an error')
+	});
+  
+});
+
+// Returns all laosn
+
+router.get('/all_loans', function(req, res, next) {
+		
+	Loans.findAll({
+		include:[{model:Books}, {model:Patrons}]
+
+	}).then(function(allLoans){
+		res.render('all_Loans', {allLoans});
+		console.log(allLoans[3])
+	})
+});
+
+// Return all patrons
+
+
+router.get('/all_patrons', function(req, res, next) {
+	Patrons.findAll().then(function(allPatrons){
+		
+		var Members = allPatrons;
+		//console.log(Members)
+		res.render('all_patrons', {Members});
+	}).catch(function (err) {
+	  //console.log(err.message)
+	});
+  
+});
+
+
+// Post Methods returns and adds book to the database
+
+router.post('/booksNew', function(req, res, next) {
+	console.log(req.body)
+	  Books.create(req.body).then(function(insertedBook){
+	  	res.redirect('/all_books');
+	  }).catch(function(err){
+	  	if(err.name=== 'SequelizeValidationError' ){
+	  		res.render('new_book', {
+	  			book: Books.build(req.body),
+	  			errors: err.errors
+	  		})
+	  	}else{
+	  		throw err;
+	  	}
+	  }).catch(function (err) {
+	  console.log(err.message)
+	});
+});
+
+
+//  Add a new loan to the database
+
+
+router.post('/loansNew', function(req, res, next) {
+	console.log(req.body)
+  Loans.create(req.body).then(function(insertedLoan){
+  	console.log(insertedLoan.dataValues)
+  	//console.log('It is inserted');
+  	res.redirect('/all_loans');
+  }).catch(function(err){
+	  	if(err.name=== 'SequelizeValidationError' ){
+	  		res.render('new_book', {
+	  			book: Books.build(req.body),
+	  			errors: err.errors
+	  		})
+	  	}else{
+	  		throw err;
+	  	}
+	  }).catch(function (err) {
+	  console.log(err.message)
+	});
+});
+
+
+// Add a new patron to the database 
+
+router.post('/patronsNew', function(req, res, next) {
+	console.log(req.body)
+  Patrons.create(req.body).then(function(insertedPatron){
+  	console.log(insertedPatron.dataValues)
+  	console.log('It is inserted')
+  	res.redirect('/all_patrons');
+  }).catch(function(err){
+	  	if(err.name=== 'SequelizeValidationError' ){
+	  		res.render('new_book', {
+	  			book: Books.build(req.body),
+	  			errors: err.errors
+	  		})
+	  	}else{
+	  		throw err;
+	  	}
+	  }).catch(function (err) {
+	  console.log(err.message)
+	});
+});
+
+
+module.exports = router;
+

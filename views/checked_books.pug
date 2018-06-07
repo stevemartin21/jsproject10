@@ -1,0 +1,45 @@
+doctype html
+html
+  head
+    title Books
+    link(rel='stylesheet', href='stylesheets/style.css')
+  nav
+    ul
+      li
+        a(href='/') Home
+      li
+        a(href='/all_books') Books
+      li
+        a(href='/all_patrons') Patrons
+      li
+        a(href='/all_loans') Loans
+  include ./error
+  body
+    h1 Checked Out Books
+    h3 Total Checked Out: #{books.length} 
+    p
+      a.button(href='/booksNew') Create New Book
+    p
+      | Filters 
+      a(href='/all_books') All
+      |  
+      a(href='/overdue') Overdue
+      |  
+      a(href='/checkedOut') Checked Out
+    table
+      thead
+        tr
+          th Title
+          th Author
+          th Genre
+          th Year Released
+      tbody
+        each book in books
+          tr
+            td
+              a(href='/books/'+ book.dataValues.Book.dataValues.id)=book.dataValues.Book.dataValues.title
+            td=book.dataValues.Book.dataValues.author
+            td=book.dataValues.Book.dataValues.genre
+            td=book.dataValues.Book.dataValues.first_published 
+        
+          

@@ -1,0 +1,49 @@
+doctype html
+html
+  head
+    title Library Manager
+    link(rel='stylesheet', href='stylesheets/style.css')
+  nav
+    ul
+      li
+        a(href='/') Home
+      li
+        a(href='/all_books') Books
+      li
+        a(href='/all_patrons') Patrons
+      li
+        a(href='/all_loans') Loans
+  include ./error
+  body
+    h1 Library Manager
+    p Welcome to #{title} Library Manager 
+    ul
+      li
+        | Books 
+        ul
+          li
+            a(href='/booksNew') New Book
+          li
+            a(href='/all_books') List All
+          li
+            a(href='/overdue') List Overdue
+          li
+            a(href='/checkedOut') List Checked Out
+      li
+        | Patrons
+        ul
+          li
+            a(href='/patronsNew') New Patron
+          li
+            a(href='/all_patrons') List All
+      li
+        | Loans
+        ul
+          li
+            a(href='/loansNew') New Loan
+          li
+            a(href='/all_loans') List All
+          li
+            a(href='/overdueLoans') List Overdue
+          li
+            a(href='/loansCheckedOut') List Checked Out

@@ -1,0 +1,43 @@
+doctype html
+html
+  head
+    title Patrons
+    link(rel='stylesheet', href='stylesheets/style.css')
+  nav
+    ul
+      li
+        a(href='/') Home
+      li
+        a(href='/all_books') Books
+      li
+        a(href='/all_patrons') Patrons
+      li
+        a(href='/all_loans') Loans
+  body
+    h1 Patrons
+    p Total Patrons #{Members.length}
+    p
+      a.button(href='/patronsNew') Create New Patron
+    table
+      thead
+        tr
+          th Name 
+          th Address
+          th Email
+          th Library ID
+          th Zip
+      tbody
+        each member in Members
+         tr
+            td
+              a(href='/patrons/'+ member.id)=member.first_name + ' ' + member.last_name
+            td= member.address
+            td= member.email
+            td= member.library_id
+            td= member.zip_code
+
+
+            
+
+       
+         

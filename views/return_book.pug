@@ -1,0 +1,36 @@
+doctype html
+html
+  head
+    title Return Book
+    link(rel='stylesheet', href='stylesheets/style.css')
+  nav
+    ul
+      li
+        a(href='/') Home
+      li
+        a(href='/all_books') Books
+      li
+        a(href='/all_patrons') Patrons
+      li
+        a(href='/all_loans') Loans
+  include ./error
+  body
+    h1 Patron: Return Book
+    p=Details.title
+      strong Book Title: 
+      |
+    p=info[0].Patron.first_name + ' ' + info[0].Patron.last_name 
+      strong Loaned By: 
+      | 
+    p=info[0].loaned_on
+      strong Loaned On: 
+      | 
+    p=info[0].return_by
+      strong Return By: 
+      | 
+    form(action='/return_book/'+ Details.id + "?_method=PUT" , method="post")
+      p
+        label(for='returned_on') Returned on:
+        input#returned_on(type='text', value=now)
+      p
+        input(type='submit', value='Return Book')

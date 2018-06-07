@@ -1,0 +1,51 @@
+doctype html
+html
+  head
+    title Loans
+    link(rel='stylesheet', href='stylesheets/style.css')
+  nav
+    ul
+      li
+        a(href='/') Home
+      li
+        a(href='/all_books') Books
+      li
+        a(href='/all_patrons') Patrons
+      li
+        a(href='/all_loans') Loans
+  include ./error
+  body
+    h1 Loans
+    h2 Total Loans: #{allLoans.length}
+    p
+      a.button(href='/loansNew') Create New Loan
+    p
+      | Filters 
+      a(href='/all_loans') All
+      |  
+      a(href='/overdueLoans') Overdue
+      |  
+      a(href='/loansCheckedOut') Checked Out
+    table
+      thead
+        tr
+          th Book
+          th Patron 
+          th Loaned on
+          th Return by 
+          th Returned on
+          th Action
+      tbody
+        each loan in allLoans
+          tr
+            td
+              a(href='/books/'+ loan.Book.id)=loan.Book.title 
+            td
+              a(href='/patrons/'+ loan.Patron.id)=loan.Patron.first_name + ' ' + loan.Patron.last_name
+            td=loan.loaned_on
+            td=loan.return_by
+            td
+            td
+              a.button(href='/return_book/' + loan.Book.id) Return Book
+       
+          
