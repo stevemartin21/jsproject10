@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title Loans
+    title Overdue Loans
     link(rel='stylesheet', href='stylesheets/style.css')
   nav
     ul
@@ -15,10 +15,9 @@ html
         a(href='/all_loans') Loans
   include ./error
   body
-    h1 Loans
-    h2 Total Loans: #{allLoans.length}
+    h1 Overdue Loans
     p
-      a.button(href='/loansNew') Create New Loan
+      a.button(href='loansNew') Create New Loan
     p
       | Filters 
       a(href='/all_loans') All
@@ -36,17 +35,16 @@ html
           th Returned on
           th Action
       tbody
-        each loan in allLoans
+        each loan in checkLoans 
           tr
             td
-              a(href='/books/'+ loan.Book.id)=loan.Book.title 
-            td
-              a(href='/patrons/'+ loan.Patron.id)=loan.Patron.first_name + ' ' + loan.Patron.last_name
+              a(href='/books/'+loan.Book.id)=loan.Book.title 
+            td 
+              a(href='/patrons/'+loan.Patron.id)=loan.Patron.first_name+ ' ' +loan.Patron.last_name
             td=loan.loaned_on
             td=loan.return_by
-            td=loan.returned_on
             td
-              if loan.returned_on === null
-                a.button(href='/return_book/' + loan.id) Return Book
+            td
+              a.button(href='/return_book') Return Book
+
        
-          

@@ -38,13 +38,13 @@ html
         each loan in checkLoans 
           tr
             td
-              a(href='/books/' + loan.dataValues.Book.id)=loan.dataValues.Book.title 
+              a(href='/books/' +loan.Book.id)=loan.Book.title 
             td 
-              a(href='/patrons/' + loan.dataValues.Patron.first_name)=loan.dataValues.Patron.first_name + ' ' + loan.dataValues.Patron.last_name
-            td=loan.dataValues.loaned_on
-            td=loan.dataValues.return_by
+              a(href='/patrons/' +loan.Patron.id)=loan.Patron.first_name + ' ' + loan.Patron.last_name
+            td=loan.loaned_on
+            td=loan.return_by
+            td=loan.returned_on
             td
-            td
-              a.button(href='/return_book') Return Book
+              a.button(href='/return_book/'+ loan.id) Return Book
 
        

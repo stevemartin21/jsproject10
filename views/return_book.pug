@@ -15,22 +15,22 @@ html
         a(href='/all_loans') Loans
   include ./error
   body
-    h1 Patron: Return Book
-    p=Details.title
+    h1 Return Book
+    p=info.Book.title
       strong Book Title: 
       |
-    p=info[0].Patron.first_name + ' ' + info[0].Patron.last_name 
+    p=info.Patron.first_name + ' ' + info.Patron.last_name 
       strong Loaned By: 
       | 
-    p=info[0].loaned_on
+    p=info.loaned_on
       strong Loaned On: 
       | 
-    p=info[0].return_by
+    p=info.return_by
       strong Return By: 
       | 
-    form(action='/return_book/'+ Details.id + "?_method=PUT" , method="post")
+    form(method="post" action='/return_book/'+info.id+"?_method=PUT")
       p
         label(for='returned_on') Returned on:
-        input#returned_on(type='text', value=now)
+        input#returned_on(type='text', value=now name='returned_on')
       p
         input(type='submit', value='Return Book')

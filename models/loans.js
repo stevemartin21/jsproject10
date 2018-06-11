@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
           msg:'The Return By Date Was Empty'
         }
       }},
-    returned_on: DataTypes.DATE
+    returned_on: DataTypes.DATEONLY
   }, {timestamps: false});
   Loans.associate = function(models) {
     // associations can be defined here

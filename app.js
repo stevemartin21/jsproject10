@@ -1,5 +1,4 @@
 var createError = require('http-errors');
-var methodOverride = require('method-override')
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -11,10 +10,13 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 var Sequelize = require('sequelize')
+var methodOverride = require('method-override')
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.use(methodOverride('_method'))
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -27,7 +29,7 @@ app.use('/users', usersRouter);
 
 // Method Overtide for Put Method
 
-app.use(methodOverride('_method'))
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty:{
           msg: "Pay attention, you missed the title"
+        },
+        len: {
+          args: [2,40],
+          msg: "Your Title is to long or short"
         }
       }
     },
@@ -15,15 +19,35 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty:{
           msg:'Looks like you forgot the author'
+        },
+        len: {
+          args: [2,100],
+          msg: "Your Author Name  is to long or short"
         }
       }},
     genre:{type: DataTypes.STRING,
       validate: {
         notEmpty:{
           msg: 'Genre is also required'
+        },
+        len: {
+          args: [2,100],
+          msg: "Your genre Name  is to long or short"
         }
       }},
-    first_published: DataTypes.INTEGER  
+    first_published: 
+    {
+      type: DataTypes.INTEGER,
+      validate:{
+        len: {
+          args: [2,6],
+          msg: "The Year is probably wrong"
+        }
+      }
+    }
+
+
+
   }, {timestamps: false});
   Books.associate = function(models) {
     // associations can be defined here
