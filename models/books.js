@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       validate:{
         len: {
-          args: [2,6],
+          args: [1,6],
           msg: "The Year is probably wrong"
         }
       }

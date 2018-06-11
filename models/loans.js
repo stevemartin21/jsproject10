@@ -1,27 +1,61 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var Loans = sequelize.define('Loans',  {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement:true},
+    id: {type: DataTypes.INTEGER,
+     primaryKey: true, 
+     autoIncrement:true
+   },
+
+
     book_id: {type:DataTypes.INTEGER, 
         underscored: true
       
       },
+
     patron_id: {type:DataTypes.INTEGER,
         underscored: true
       },
-    loaned_on: {type:DataTypes.DATEONLY,
+
+
+    loaned_on: {type:DataTypes.STRING,
       validate:{
         notEmpty:{
           msg:'The Loaned On Date was empty'
+        },
+        isDate: {
+          args:true,
+          msg: 'This is not a date '
         }
+
       }},
-    return_by: {type: DataTypes.DATEONLY,
+    return_by: {type: DataTypes.STRING,
       validate:{
         notEmpty:{
           msg:'The Return By Date Was Empty'
+        },
+        isDate: {
+          args:true,
+          msg: 'This is not a date '
         }
       }},
-    returned_on: DataTypes.DATEONLY
+    returned_on: {
+
+      type: DataTypes.STRING,
+
+      validate:{
+        isDate: {
+          args:true,
+          msg: 'This is not a date '
+        }
+
+
+      }
+
+
+    }
+
+
+
   }, {timestamps: false});
   Loans.associate = function(models) {
     // associations can be defined here

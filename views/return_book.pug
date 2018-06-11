@@ -16,17 +16,17 @@ html
   include ./error
   body
     h1 Return Book
-    p=info.Book.title
-      strong Book Title: 
+    p 
+      strong Book Title: #{info.Book.title}
       |
-    p=info.Patron.first_name + ' ' + info.Patron.last_name 
-      strong Loaned By: 
+    p 
+      strong Loaned By: #{info.Patron.first_name} #{info.Patron.last_name}
       | 
-    p=info.loaned_on
-      strong Loaned On: 
+    p 
+      strong Loaned On: #{info.loaned_on}
       | 
-    p=info.return_by
-      strong Return By: 
+    p
+      strong Return By: #{info.return_by}
       | 
     form(method="post" action='/return_book/'+info.id+"?_method=PUT")
       p
