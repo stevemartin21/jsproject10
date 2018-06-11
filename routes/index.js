@@ -11,10 +11,10 @@ var dueDate = moment().add(7, 'days').format('YYYY-MM-DD');
 /////////////////////////////////////////////////////////////////   HOME PAGE //////////////////////////////////////////////////////////////////////
 /* GET home page. */
 
-router.get('/', function(req, res, next) {
-  res.render('home', { title: "Stevo's" })
+router.get('/', function(req, res) {
+	 res.render('home', { title: "Stevo's" })
   .catch(function (err) {
-	  console.log('Yo this is an error yo')
+	  console.log(err.message)
 	});
 });
 
