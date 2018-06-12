@@ -17,8 +17,6 @@ router.get('/', function(req, res) {
 	  console.log(err.message)
 	});
 });
-
-
 	/////////////////////////////////////////////////////////////////  ADD NEW BOOK , LOAN , PATRON	
 // New books add a book 
 router.get('/booksNew', function(req, res, next) {
@@ -54,7 +52,6 @@ router.get('/loansNew', function(req, res, next) {
 	});
 });
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // CHECkOUT BOOKS //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,8 +77,6 @@ router.get('/checkedOut', function(req, res, next) {
 ///////////////  THis will help return a book//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //  RETURN A BOOK //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 router.get('/return_book/:id', function(req, res, next) {	
 	console.log(req.body)
@@ -250,15 +245,26 @@ router.put("/patrons/:id", function(req, res, next){
 router.put("/return_book/:id", function(req, res, next){
 	
 	Loans.findById(req.params.id).then(function(loan){
-
+			//console.log(req.body)
 				var loanInfo = loan	
 				//console.log(req.body)
 		return loan.update(req.body)}).then(function(){
 
 				res.redirect('/all_loans')
 			}).catch(function (err) {
-			  console.log('This is an error')
-			})
+			 if(err.name=== 'SequelizeValidationError' ){
+	  		console.log(req.body)
+	  		//res.render('return_book', {
+	  			//book: req.body,
+	  			//errors: err.errors
+	  			res.sendStatus(500);
+	  		
+	  	}else{
+	  		throw err;
+	  	}
+	  }).catch(function (err) {
+	  res.sendStatus(500);
+	});
 }); 
 
 ///////////////////   GETS ALL BOOK & ALL PATRONS AN ALL LOANS ///////////////////////////////////////////////////////////////////////////////////////////
@@ -353,11 +359,7 @@ router.post('/loansNew', function(req, res, next) {
   }).catch(function(err){
 	  	if(err.name=== 'SequelizeValidationError' ){
 	  		console.log(req.body)
-	  		res.render('new_loan', {
-
-	  			loan: req.body,
-	  			errors: err.errors
-	  		})
+	  		res.sendStatus(500);
 	  	}else{
 	  		throw err;
 	  	}

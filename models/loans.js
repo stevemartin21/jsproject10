@@ -5,8 +5,6 @@ module.exports = (sequelize, DataTypes) => {
      primaryKey: true, 
      autoIncrement:true
    },
-
-
     book_id: {type:DataTypes.INTEGER, 
         underscored: true
       
@@ -15,9 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     patron_id: {type:DataTypes.INTEGER,
         underscored: true
       },
-
-
-    loaned_on: {type:DataTypes.STRING,
+    loaned_on: {type:DataTypes.DATEONLY,
       validate:{
         notEmpty:{
           msg:'The Loaned On Date was empty'
@@ -25,10 +21,15 @@ module.exports = (sequelize, DataTypes) => {
         isDate: {
           args:true,
           msg: 'This is not a date '
+        },
+
+        len:{
+          args:[10,30],
+          msg:'Please reformat the date'
         }
 
       }},
-    return_by: {type: DataTypes.STRING,
+    return_by: {type: DataTypes.DATEONLY,
       validate:{
         notEmpty:{
           msg:'The Return By Date Was Empty'
@@ -36,22 +37,26 @@ module.exports = (sequelize, DataTypes) => {
         isDate: {
           args:true,
           msg: 'This is not a date '
+        },
+         len:{
+          args:[10,30],
+          msg:'Please reformat the date'
         }
       }},
     returned_on: {
 
-      type: DataTypes.STRING,
+      type: DataTypes.DATEONLY,
 
       validate:{
         isDate: {
           args:true,
           msg: 'This is not a date '
+        },
+         len:{
+          args:[10,30],
+          msg:'Please reformat the date'
         }
-
-
       }
-
-
     }
 
 

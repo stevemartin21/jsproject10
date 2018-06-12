@@ -30,10 +30,10 @@ html
             option(value=patron.id)=patron.first_name + ' ' + patron.last_name
          
       p
-        label(for='loaned_on') Loaned on:
+        label(for='loaned_on') Loaned on (Format: YYYY-MM-DD):
         input#loaned_on(type='text',name='loaned_on', value=now) 
       p
-        label(for='return_by') Return by:
+        label(for='return_by') Return by (Format: YYYY-MM-DD):
         input#return_by(type='text', name='return_by', value=dueDate) 
       p
         input(type='submit', value='Create New Loan')
