@@ -205,19 +205,48 @@ router.get('/patrons/:id', function(req, res, next) {
 
 
 //  Update the book details, ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////
+
+//////////////////////////////////////   I NEED TO FIX THESE TWO  ////////////////////////////////////////////////////////////////
+
 
 router.put("/books/:id", function(req, res, next){
-	//console.log(req.body)
+	console.log(req.body)
 	
 	Books.findById(req.params.id).then(function(book){
-		console.log(book)
-		return book.update(req.body);	
+		//var Details = book
+		//console.log(req.body)
+		return book.update(req.body)	
+		
 	}).then(function(){
 			res.redirect('/all_books')
-				}).catch(function (err) {
-			  console.log('This is an error')
-			})
-	}); 
+		}).catch(function (err) {
+			if(err.name=== 'SequelizeValidationError' ){
+	  			
+					Loans.findAll({
+
+						include: [
+							{model: Books}, 
+							{model: Patrons}
+								],
+							where: {
+							book_id: req.params.id
+							}						  
+				}).then(function(info){
+					req.body.id = req.params.id;
+					//console.log(info)	
+				res.render('book_detail', {Details:req.body, info:info, errors: err.errors})
+				})
+			
+		} else {
+			throw err;
+		} 
+
+	})
+})
+  
+
+
 
 ////////////////////  UPdate Patron////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -230,9 +259,30 @@ router.put("/patrons/:id", function(req, res, next){
 	}).then(function(){
 			res.redirect('/all_patrons')
 				}).catch(function (err) {
-			  console.log('This is an error')
-			})
-	}); 
+			if(err.name=== 'SequelizeValidationError' ){
+	  			
+				//console.log(Details)
+					Loans.findAll({
+
+						include: [
+							{model: Books}, 
+							{model: Patrons}
+								],
+							where: {
+							book_id: req.params.id
+							}						  
+				}).then(function(info){
+					req.body.id = req.params.id;
+					//console.log(info)	
+				res.render('patron_detail', {Details:req.body, info:info, errors: err.errors})
+				})
+			
+		} else {
+			throw err;
+		} 
+
+	})
+}); 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -243,6 +293,7 @@ router.put("/patrons/:id", function(req, res, next){
 //////////////////////////////////////////////////////////////  Return a book
 
 router.put("/return_book/:id", function(req, res, next){
+	console.log(req.body)
 	
 	Loans.findById(req.params.id).then(function(loan){
 			//console.log(req.body)
@@ -253,18 +304,24 @@ router.put("/return_book/:id", function(req, res, next){
 				res.redirect('/all_loans')
 			}).catch(function (err) {
 			 if(err.name=== 'SequelizeValidationError' ){
-	  		console.log(req.body)
-	  		//res.render('return_book', {
-	  			//book: req.body,
-	  			//errors: err.errors
-	  			res.sendStatus(500);
-	  		
-	  	}else{
-	  		throw err;
-	  	}
-	  }).catch(function (err) {
-	  res.sendStatus(500);
+			 	Loans.findById(req.params.id, {
+		//console.log(loanId)
+					include: [
+					 {model: Patrons,required: true},
+					 {model: Books,required: true}
+					]
+			 							  
+				}).then(function(info){
+					req.body.id = req.params.id;
+					console.log(info)	
+				res.render('return_book', { info:info, errors: err.errors, now:now})
+				})
+			
+		} else {
+			throw err;
+		} 
 	});
+	  		
 }); 
 
 ///////////////////   GETS ALL BOOK & ALL PATRONS AN ALL LOANS ///////////////////////////////////////////////////////////////////////////////////////////
@@ -349,7 +406,35 @@ router.post('/booksNew', function(req, res, next) {
 
 //  Add a new loan to the database
 
+router.post('/loansNew', function(req, res, next) {
+	console.log(req.body)
+  Loans.create(req.body).then(function(insertedLoan){
+  	console.log(insertedLoan.dataValues)
+  	//console.log('It is inserted');
+  	res.redirect('/all_loans');
+  }).catch(function(err){
+			  	if(err.name=== 'SequelizeValidationError' ){
+					  	Books.findAll().then(function(books){
+							Patrons.findAll().then(function(patrons){
+								res.render('new_loan',  {
+								errors: err.errors,
+								books:books, 
+								patrons:patrons,
+								now:now,
+								dueDate:dueDate
+							})
+						});	
 
+					});
+				}
+			  		
+			  
+		});
+});
+
+
+
+/*
 router.post('/loansNew', function(req, res, next) {
 	//console.log(req.body)
   Loans.create(req.body).then(function(insertedLoan){
@@ -367,6 +452,8 @@ router.post('/loansNew', function(req, res, next) {
 	  console.log(err.message)
 	});
 });
+
+*/
 
 
 // Add a new patron to the database 
