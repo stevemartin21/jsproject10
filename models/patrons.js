@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
           msg:'First Name needs to be filled out'
         },
         len: {
-          args: [2,100],
+          args: [2,50],
           msg: "Your First Name  is too long or short"
         }
       }},
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
           msg:'Last Name needs to be filled out'
         },
          len: {
-          args: [2,100],
+          args: [2,50],
           msg: "Your  Last Name  is too long or short"
         }
       }},
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
           msg:'Address needs to be filled out'
         },
          len: {
-          args: [2,100],
+          args: [2,50],
           msg: "Your Address  is too long or short"
         }
       }},
@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
           msg:'Library Id needs to be filled out'
         },
          len: {
-          args: [2,100],
+          args: [2,50],
           msg: "Your Library Id  is too long or short"
         }
       }},
@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
           msg:'Zip Code needs to be filled out'
         },
          len: {
-          args: [2,100],
+          args: [2,50],
           msg: "Your Zip Code  is too long or short"
         }
       }}

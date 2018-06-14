@@ -39,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       type: DataTypes.INTEGER,
       validate:{
+         notEmpty:{
+          msg:'Looks like you forgot the author'
+        },
         len: {
           args: [1,6],
           msg: "The Year is probably wrong"
